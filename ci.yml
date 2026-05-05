@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+config/config.yaml
+logs/
+*.log
+.DS_Store
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.idea/
+.vscode/
+*.swp
+redis-data/
