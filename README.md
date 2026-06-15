@@ -1,21 +1,32 @@
-# 🛡️ NetBot — Telegram Network Monitoring & Control Agent
+# 🛡️ J1-NEXUS — Telegram Network Monitoring & Control Agent
 
-A powerful, multi-platform Telegram bot that auto-discovers servers and network devices, builds a live dashboard, and lets you control Windows (AD, DNS, DHCP) and Linux servers — all from Telegram.
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python)](https://www.python.org/)
+[![Telegram Bot](https://img.shields.io/badge/Telegram-Bot-26A5E4?logo=telegram)](https://core.telegram.org/bots)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Maintained by OneByJorah](https://img.shields.io/badge/Maintained%20by-OneByJorah-1E90FF?logo=github)](https://github.com/OneByJorah)
 
 ---
 
-## 🚀 Features
+## 📋 Overview
+
+**J1-NEXUS** is a powerful, multi-platform Telegram bot that auto-discovers servers and network devices, builds a live dashboard, and lets you control Windows (AD, DNS, DHCP) and Linux servers — all from Telegram. Designed for MSPs and network engineers who want full infrastructure control from their pocket.
+
+> **Built with ❤️ by [OneByJorah](https://github.com/OneByJorah)**
+
+---
+
+## ✨ Features
 
 | Feature | Description |
-|---|---|
-| 🔍 Auto-Discovery | Scans your network and discovers all agents automatically |
-| 🖥️ Windows Control | Manage Active Directory, DNS, DHCP roles remotely |
-| 👤 User Management | Create, reset, disable AD users from Telegram |
-| 🐧 Linux Control | Full server stats, services, processes, firewall |
-| 📡 SNMP Polling | Discovers and polls routers, switches, printers |
-| 📊 Live Dashboard | Web dashboard auto-built from discovered agents |
-| 🔔 Alerts | CPU, disk, memory, service-down alerts to Telegram |
-| 🔐 Secure | Token-based auth, admin whitelist, encrypted comms |
+|---------|-------------|
+| 🔍 **Auto-Discovery** | Scans your network and discovers all agents automatically |
+| 🖥️ **Windows Control** | Manage Active Directory, DNS, DHCP roles remotely |
+| 👤 **User Management** | Create, reset, disable AD users from Telegram |
+| 🐧 **Linux Control** | Full server stats, services, processes, firewall |
+| 📡 **SNMP Polling** | Discovers and polls routers, switches, printers |
+| 📊 **Live Dashboard** | Web dashboard auto-built from discovered agents |
+| 🔔 **Alerts** | CPU, disk, memory, service-down alerts to Telegram |
+| 🔐 **Secure** | Token-based auth, admin whitelist, encrypted comms |
 
 ---
 
@@ -41,10 +52,10 @@ A powerful, multi-platform Telegram bot that auto-discovers servers and network 
 
 ---
 
-## 📦 Project Structure
+## 📁 Project Structure
 
 ```
-netbot/
+J1-NEXUS/
 ├── bot/
 │   ├── main.py              # Bot entry point
 │   ├── handlers.py          # Telegram command handlers
@@ -60,22 +71,33 @@ netbot/
 ├── discovery/
 │   ├── network_scanner.py   # Auto-discovery via ping/ARP/mDNS
 │   └── snmp_scanner.py      # SNMP device discovery
-├── snmp/
-│   ├── poller.py            # SNMP polling engine
-│   └── mibs/                # Common MIB definitions
+├── snmp_scanner.py          # SNMP polling engine
 ├── dashboard/
-│   ├── app.py               # Flask web dashboard
-│   ├── templates/
-│   │   └── index.html       # Dashboard UI
-│   └── static/              # CSS/JS assets
-├── config/
-│   ├── config.yaml          # Main configuration
-│   └── snmp_community.yaml  # SNMP community strings
+│   ├── app.py (index.html)  # Flask web dashboard
+│   └── index.html           # Dashboard UI
+├── config/                  # Configuration files
+├── handlers.py              # Shared handlers
 ├── docker-compose.yml        # Full stack deployment
 ├── Dockerfile               # Bot container
-├── requirements.txt
-└── README.md
+├── requirements.txt         # Python dependencies
+├── install.sh               # Linux installer
+├── install.ps1              # Windows installer
+├── ci.yml                   # CI pipeline
+└── tests/                   # Test suite
 ```
+
+---
+
+## 📋 Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Python** | 3.11 or higher |
+| **Redis** | For state management and task queue |
+| **Windows Agents** | PowerShell 5.1+, RSAT tools |
+| **Linux Agents** | Python 3.8+ |
+| **SNMP** | Community strings configured on devices |
+| **Telegram** | Bot token from [@BotFather](https://t.me/BotFather) |
 
 ---
 
@@ -84,8 +106,8 @@ netbot/
 ### 1. Clone & Configure
 
 ```bash
-git clone https://github.com/yourusername/netbot.git
-cd netbot
+git clone https://github.com/OneByJorah/J1-NEXUS.git
+cd J1-NEXUS
 cp config/config.yaml.example config/config.yaml
 # Edit config.yaml with your bot token and admin IDs
 ```
@@ -96,7 +118,14 @@ cp config/config.yaml.example config/config.yaml
 docker-compose up -d
 ```
 
-### 3. Deploy Agent on Windows Server
+### 3. Run Locally
+
+```bash
+pip install -r requirements.txt
+python bot/main.py
+```
+
+### 4. Deploy Agent on Windows Server
 
 ```powershell
 # Run as Administrator
@@ -104,7 +133,7 @@ Invoke-WebRequest -Uri "http://YOUR_BOT_SERVER:8080/install/windows" -OutFile in
 .\install.ps1 -BotToken "YOUR_TOKEN" -BotServer "http://YOUR_BOT_SERVER:8080"
 ```
 
-### 4. Deploy Agent on Linux Server
+### 5. Deploy Agent on Linux Server
 
 ```bash
 curl -sSL http://YOUR_BOT_SERVER:8080/install/linux | \
@@ -116,16 +145,18 @@ curl -sSL http://YOUR_BOT_SERVER:8080/install/linux | \
 ## 💬 Bot Commands
 
 ### General
+
 | Command | Description |
-|---|---|
+|---------|-------------|
 | `/start` | Show main menu |
 | `/dashboard` | Get dashboard link |
 | `/agents` | List all discovered agents |
 | `/status` | Overall network health |
 
 ### Windows Commands
+
 | Command | Description |
-|---|---|
+|---------|-------------|
 | `/win <host> dns` | Show DNS zones and records |
 | `/win <host> dhcp` | Show DHCP scopes and leases |
 | `/win <host> ad users` | List AD users |
@@ -136,8 +167,9 @@ curl -sSL http://YOUR_BOT_SERVER:8080/install/linux | \
 | `/win <host> eventlog` | Show recent critical events |
 
 ### Linux Commands
+
 | Command | Description |
-|---|---|
+|---------|-------------|
 | `/lx <host> stats` | CPU, RAM, disk usage |
 | `/lx <host> services` | Systemd service status |
 | `/lx <host> ps` | Top processes |
@@ -147,33 +179,86 @@ curl -sSL http://YOUR_BOT_SERVER:8080/install/linux | \
 | `/lx <host> cmd <command>` | Run shell command (admin only) |
 
 ### SNMP Commands
+
 | Command | Description |
-|---|---|
+|---------|-------------|
 | `/snmp scan` | Scan for SNMP devices |
 | `/snmp <host>` | Poll device stats |
 | `/snmp list` | List known SNMP devices |
 
 ---
 
-## 🔐 Security Notes
+## 🔐 Security
 
 - Only whitelisted Telegram user IDs can control the bot
 - Agent communication uses HMAC-signed requests
-- Sensitive commands (cmd, ad create) require admin role
-- All actions are logged
+- Sensitive commands (`cmd`, `ad create`) require admin role
+- All actions are logged and auditable
+- No credentials stored in plain text
 
 ---
 
-## 📋 Requirements
+## 🐳 Docker Deployment
 
-- Python 3.11+
-- Redis (for state/queue)
-- Windows agents: PowerShell 5.1+, RSAT tools
-- Linux agents: Python 3.8+
-- SNMP: community strings configured on devices
+```bash
+# Build and start all services
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop all services
+docker compose down
+
+# Update to latest
+docker compose pull && docker compose up -d
+```
+
+---
+
+## 🐛 Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| Bot not responding | Verify token in config.yaml |
+| Agents not discovered | Check network connectivity and firewall rules |
+| Docker build fails | Ensure Dockerfile and .dockerignore are correct |
+| SNMP timeout | Verify community strings and device accessibility |
+
+---
+
+## 🔄 Updates
+
+```bash
+cd /path/to/J1-NEXUS
+git pull origin main
+docker compose up -d --build
+```
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
 ## 📄 License
 
 MIT — use freely, contribute back!
+
+---
+
+## 📞 Support
+
+For issues or questions, please open an issue on GitHub:
+
+https://github.com/OneByJorah/J1-NEXUS/issues
+
+---
+
+**Made with ❤️ by [OneByJorah](https://github.com/OneByJorah)**
