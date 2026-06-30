@@ -1,0 +1,16 @@
+{
+  "runtime": "Docker Compose",
+  "build_method": "docker compose build && docker compose up -d",
+  "entry_point": "Docker-based NOC Nexus app",
+  "dependencies": ["docker", "docker compose"],
+  "ports": [],
+  "deploy_steps": [
+    "docker compose config",
+    "docker compose build",
+    "docker compose up -d"
+  ],
+  "has_docker": true,
+  "has_compose": true,
+  "has_npm": false,
+  "notes": "Stack detected. Deploy blocked on this host because Docker daemon is not running."
+}
