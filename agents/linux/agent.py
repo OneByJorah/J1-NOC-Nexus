@@ -6,25 +6,21 @@ Install: sudo python3 agent.py --install --server http://BOTSERVER:8080 --token 
 """
 
 import argparse
-import asyncio
 import hashlib
 import hmac
 import json
 import logging
 import os
 import platform
-import re
 import shutil
 import socket
 import subprocess
 import sys
 import time
-from datetime import datetime
-from pathlib import Path
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from threading import Thread
-
 import urllib.request
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
+from threading import Thread
 
 AGENT_VERSION = "1.0.0"
 AGENT_PORT    = 7845
@@ -39,7 +35,7 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler(),
         logging.FileHandler(LOG_PATH) if os.path.exists("/var/log") else logging.StreamHandler(),
-    ]
+    ],
 )
 log = logging.getLogger("netbot.agent")
 
@@ -331,7 +327,7 @@ def register_with_server(bot_server: str):
             f"{bot_server}/agent/register",
             data=data,
             headers={"Content-Type": "application/json"},
-            method="POST"
+            method="POST",
         )
         urllib.request.urlopen(req, timeout=10)
         log.info(f"Registered with bot server: {bot_server}")

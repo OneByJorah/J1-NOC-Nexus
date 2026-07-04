@@ -3,15 +3,13 @@ NetBot Web Dashboard
 Real-time view of all agents and SNMP devices
 """
 
-import json
-import time
 import os
 import sys
-from pathlib import Path
+import time
 from datetime import datetime, timezone
+from pathlib import Path
 
-import yaml
-from flask import Flask, render_template, jsonify
+from flask import Flask, jsonify, render_template
 from flask_socketio import SocketIO, emit
 
 # Add parent to path

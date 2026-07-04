@@ -2,19 +2,19 @@
 NetBot Telegram Command Handlers
 """
 
-import logging
 import json
+import logging
 from datetime import datetime, timezone
 from functools import wraps
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ContextTypes
-from telegram.constants import ParseMode
-
 from bot.keyboards import (
-    main_menu_keyboard, agent_list_keyboard, windows_menu_keyboard,
-    linux_menu_keyboard, ad_menu_keyboard
+    agent_list_keyboard,
+    main_menu_keyboard,
+    windows_menu_keyboard,
 )
+from telegram import Update
+from telegram.constants import ParseMode
+from telegram.ext import ContextTypes
 
 log = logging.getLogger("netbot.handlers")
 
@@ -53,7 +53,7 @@ async def start_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         text,
         parse_mode=ParseMode.MARKDOWN,
-        reply_markup=main_menu_keyboard()
+        reply_markup=main_menu_keyboard(),
     )
 
 
@@ -68,7 +68,7 @@ async def status_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "📡 *Network Status*\n\nNo agents or SNMP devices discovered yet.\n"
             "Make sure you have deployed agents on your servers.",
-            parse_mode=ParseMode.MARKDOWN
+            parse_mode=ParseMode.MARKDOWN,
         )
         return
 
@@ -101,7 +101,7 @@ async def status_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "\n".join(lines),
-        parse_mode=ParseMode.MARKDOWN
+        parse_mode=ParseMode.MARKDOWN,
     )
 
 
@@ -116,7 +116,7 @@ async def agents_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🖥️ *Registered Agents* — select one:",
         parse_mode=ParseMode.MARKDOWN,
-        reply_markup=agent_list_keyboard(agents)
+        reply_markup=agent_list_keyboard(agents),
     )
 
 
@@ -131,7 +131,7 @@ async def dashboard_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f"📊 *NetBot Dashboard*\n\n🔗 [Open Dashboard]({url})\n\n"
         f"The dashboard shows live metrics from all discovered agents and SNMP devices.",
-        parse_mode=ParseMode.MARKDOWN
+        parse_mode=ParseMode.MARKDOWN,
     )
 
 
@@ -151,7 +151,7 @@ async def windows_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "🖥️ *Windows Agents* — select a server:",
             parse_mode=ParseMode.MARKDOWN,
-            reply_markup=agent_list_keyboard(win_agents, prefix="win")
+            reply_markup=agent_list_keyboard(win_agents, prefix="win"),
         )
         return
 
@@ -174,19 +174,22 @@ async def _dispatch_windows_command(update, ctx, agent, action, extra_args):
         await update.message.reply_text(
             f"🖥️ *{host}* — Windows Menu",
             parse_mode=ParseMode.MARKDOWN,
-            reply_markup=windows_menu_keyboard(host)
+            reply_markup=windows_menu_keyboard(host),
         )
         return
 
     msg = await update.message.reply_text(f"⏳ Querying `{host}`...", parse_mode=ParseMode.MARKDOWN)
 
     try:
-        import aiohttp, asyncio
+
+        import aiohttp
         cfg = ctx.bot_data["config"]
         secret = cfg["server"]["secret_key"]
 
         payload = {"action": action, "args": extra_args}
-        import hmac, hashlib, time
+        import hashlib
+        import hmac
+        import time
         ts = str(int(time.time()))
         sig = hmac.new(secret.encode(), f"{ts}:{json.dumps(payload)}".encode(), hashlib.sha256).hexdigest()
 
@@ -195,7 +198,7 @@ async def _dispatch_windows_command(update, ctx, agent, action, extra_args):
                 f"{url}/command",
                 json=payload,
                 headers={"X-Timestamp": ts, "X-Signature": sig},
-                timeout=aiohttp.ClientTimeout(total=30)
+                timeout=aiohttp.ClientTimeout(total=30),
             ) as resp:
                 if resp.status != 200:
                     await msg.edit_text(f"❌ Agent returned HTTP {resp.status}")
@@ -225,7 +228,7 @@ async def linux_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "🐧 *Linux Agents* — select a server:",
             parse_mode=ParseMode.MARKDOWN,
-            reply_markup=agent_list_keyboard(lx_agents, prefix="lx")
+            reply_markup=agent_list_keyboard(lx_agents, prefix="lx"),
         )
         return
 
@@ -245,7 +248,11 @@ async def _dispatch_linux_command(update, ctx, agent, action, extra_args):
     msg  = await update.message.reply_text(f"⏳ Querying `{host}`...", parse_mode=ParseMode.MARKDOWN)
 
     try:
-        import aiohttp, time, hmac, hashlib
+        import hashlib
+        import hmac
+        import time
+
+        import aiohttp
         cfg    = ctx.bot_data["config"]
         secret = cfg["server"]["secret_key"]
         url    = agent["url"]
@@ -259,7 +266,7 @@ async def _dispatch_linux_command(update, ctx, agent, action, extra_args):
                 f"{url}/command",
                 json=payload,
                 headers={"X-Timestamp": ts, "X-Signature": sig},
-                timeout=aiohttp.ClientTimeout(total=30)
+                timeout=aiohttp.ClientTimeout(total=30),
             ) as resp:
                 data = await resp.json()
 
@@ -333,7 +340,7 @@ async def alert_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         "Alerts are sent automatically when:\n"
         "• CPU > threshold\n• Memory > threshold\n• Disk > threshold\n• Service goes down\n\n"
         "Edit thresholds in `config/config.yaml`",
-        parse_mode=ParseMode.MARKDOWN
+        parse_mode=ParseMode.MARKDOWN,
     )
 
 
@@ -353,8 +360,8 @@ async def callback_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             # Fake update to reuse handler
             ctx.args = [host, action]
             await _dispatch_windows_command(
-                type('obj', (object,), {'message': query.message, 'effective_user': query.from_user})(),
-                ctx, agent, action, []
+                type("obj", (object,), {"message": query.message, "effective_user": query.from_user})(),
+                ctx, agent, action, [],
             )
 
     elif data.startswith("lx:"):
@@ -364,12 +371,12 @@ async def callback_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         if agent:
             ctx.args = [host, action]
             await _dispatch_linux_command(
-                type('obj', (object,), {'message': query.message, 'effective_user': query.from_user})(),
-                ctx, agent, action, []
+                type("obj", (object,), {"message": query.message, "effective_user": query.from_user})(),
+                ctx, agent, action, [],
             )
 
     elif data == "status":
         await status_handler(
-            type('obj', (object,), {'message': query.message, 'effective_user': query.from_user})(),
-            ctx
+            type("obj", (object,), {"message": query.message, "effective_user": query.from_user})(),
+            ctx,
         )

@@ -6,23 +6,30 @@ Main entry point
 
 import asyncio
 import logging
-import sys
 import os
+import sys
 from pathlib import Path
 
 import yaml
 from telegram.ext import (
-    Application, CommandHandler, CallbackQueryHandler,
-    MessageHandler, filters
+    Application,
+    CallbackQueryHandler,
+    CommandHandler,
 )
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from bot.handlers import (
-    start_handler, status_handler, agents_handler,
-    windows_handler, linux_handler, snmp_handler,
-    dashboard_handler, alert_handler, callback_handler
+    agents_handler,
+    alert_handler,
+    callback_handler,
+    dashboard_handler,
+    linux_handler,
+    snmp_handler,
+    start_handler,
+    status_handler,
+    windows_handler,
 )
 from bot.scheduler import setup_scheduler
 from discovery.network_scanner import NetworkScanner

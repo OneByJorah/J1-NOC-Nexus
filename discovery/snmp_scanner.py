@@ -6,7 +6,6 @@ Supports SNMP v1/v2c/v3
 import asyncio
 import logging
 import time
-from typing import Optional
 
 log = logging.getLogger("netbot.snmp")
 
@@ -119,7 +118,7 @@ class SNMPScanner:
             else:
                 info["status"] = "offline"
 
-    async def poll_device(self, ip: str) -> Optional[dict]:
+    async def poll_device(self, ip: str) -> dict | None:
         """Poll a specific device, trying all communities."""
         for community in self.communities:
             data = await self._snmp_get_basic(ip, community)
@@ -130,15 +129,20 @@ class SNMPScanner:
                 return data
         return None
 
-    async def _snmp_get_basic(self, ip: str, community: str) -> Optional[dict]:
+    async def _snmp_get_basic(self, ip: str, community: str) -> dict | None:
         """
         Perform basic SNMP GETs using pysnmp.
         Returns a dict of device info, or None if unreachable.
         """
         try:
             from pysnmp.hlapi.asyncio import (
-                getCmd, SnmpEngine, CommunityData, UdpTransportTarget,
-                ContextData, ObjectType, ObjectIdentity
+                CommunityData,
+                ContextData,
+                ObjectIdentity,
+                ObjectType,
+                SnmpEngine,
+                UdpTransportTarget,
+                getCmd,
             )
 
             engine = SnmpEngine()
@@ -149,7 +153,7 @@ class SNMPScanner:
                     CommunityData(community, mpModel=1),
                     UdpTransportTarget((ip, self.port), timeout=self.timeout, retries=self.retries),
                     ContextData(),
-                    ObjectType(ObjectIdentity(oid_str))
+                    ObjectType(ObjectIdentity(oid_str)),
                 )
                 error_indication, error_status, _, var_binds = await iterator
                 if error_indication or error_status:
@@ -163,7 +167,7 @@ class SNMPScanner:
                 get_oid(OID_SYSNAME),
                 get_oid(OID_SYSDESCR),
                 get_oid(OID_SYSUPTIME),
-                return_exceptions=True
+                return_exceptions=True,
             )
 
             if not description:
