@@ -1,15 +1,17 @@
 """
 NetBot Basic Tests
 """
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-import pytest
+import hashlib
+import hmac
 import json
 import time
-import hmac
-import hashlib
+
+import pytest
 
 
 def make_signature(secret: str, timestamp: str, body: str) -> str:
@@ -36,7 +38,7 @@ class TestDiscovery:
         from discovery.network_scanner import NetworkScanner
         cfg = {
             "discovery": {"networks": ["192.168.1.0/24"], "scan_interval": 300, "ping_timeout": 1, "ping_workers": 10},
-            "server": {"secret_key": "test"}
+            "server": {"secret_key": "test"},
         }
         scanner = NetworkScanner(cfg)
         assert scanner is not None
@@ -45,7 +47,7 @@ class TestDiscovery:
         from discovery.snmp_scanner import SNMPScanner
         cfg = {
             "snmp": {"communities": ["public"], "port": 161, "timeout": 5, "retries": 2, "poll_interval": 60},
-            "discovery": {"networks": ["192.168.1.0/24"]}
+            "discovery": {"networks": ["192.168.1.0/24"]},
         }
         scanner = SNMPScanner(cfg)
         assert scanner is not None
@@ -55,7 +57,7 @@ class TestAgentServer:
     def test_agent_server_import(self):
         from bot.agent_server import create_agent_server
         cfg = {
-            "server": {"secret_key": "test", "host": "0.0.0.0", "port": 8080}
+            "server": {"secret_key": "test", "host": "0.0.0.0", "port": 8080},
         }
         app = create_agent_server({}, {}, cfg)
         assert app is not None
@@ -69,7 +71,7 @@ class TestLinuxAgent:
             import importlib.util
             spec = importlib.util.spec_from_file_location(
                 "agent",
-                os.path.join(os.path.dirname(__file__), "../agents/linux/agent.py")
+                os.path.join(os.path.dirname(__file__), "../agents/linux/agent.py"),
             )
             agent = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(agent)

@@ -7,7 +7,6 @@ import asyncio
 import ipaddress
 import logging
 import time
-from typing import Optional
 
 import aiohttp
 
@@ -61,7 +60,7 @@ class NetworkScanner:
         found = sum(1 for r in results if r and not isinstance(r, Exception))
         log.info(f"Discovery scan complete. Found/updated {found} agents.")
 
-    async def _probe_host(self, ip: str, sem: asyncio.Semaphore) -> Optional[dict]:
+    async def _probe_host(self, ip: str, sem: asyncio.Semaphore) -> dict | None:
         """Try to reach the NetBot agent on a host."""
         async with sem:
             url = f"http://{ip}:{AGENT_PORT}/info"
@@ -69,7 +68,7 @@ class NetworkScanner:
                 async with aiohttp.ClientSession() as session:
                     async with session.get(
                         url,
-                        timeout=aiohttp.ClientTimeout(total=self.timeout)
+                        timeout=aiohttp.ClientTimeout(total=self.timeout),
                     ) as resp:
                         if resp.status != 200:
                             return None

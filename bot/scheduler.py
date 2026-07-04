@@ -5,10 +5,9 @@ Runs heartbeat checks, alert polling, metric collection
 
 import logging
 import time
-from datetime import datetime, timezone, timedelta
 
-from telegram.ext import Application
 from telegram.constants import ParseMode
+from telegram.ext import Application
 
 log = logging.getLogger("netbot.scheduler")
 
@@ -63,7 +62,8 @@ async def check_agent_heartbeats(context):
 
 async def collect_agent_metrics(context):
     """Pull latest metrics from all online agents and check thresholds."""
-    import aiohttp, asyncio, json, hmac, hashlib
+    import asyncio
+
 
     cfg     = context.bot_data.get("config", {})
     agents  = context.bot_data.get("agents", {})
@@ -83,7 +83,7 @@ async def collect_agent_metrics(context):
 
     for hostname, result in zip(
         [h for h, a in agents.items() if a.get("status") == "online"],
-        results
+        results,
     ):
         if isinstance(result, Exception):
             log.debug(f"Metrics fetch failed for {hostname}: {result}")
@@ -100,7 +100,12 @@ async def collect_agent_metrics(context):
 
 
 async def _fetch_metrics(agent: dict, secret: str) -> dict | None:
-    import aiohttp, json, hmac, hashlib, time as t
+    import hashlib
+    import hmac
+    import json
+    import time as t
+
+    import aiohttp
 
     url     = agent.get("url", "")
     payload = {"action": "metrics"}
@@ -113,7 +118,7 @@ async def _fetch_metrics(agent: dict, secret: str) -> dict | None:
                 f"{url}/command",
                 json=payload,
                 headers={"X-Timestamp": ts, "X-Signature": sig},
-                timeout=aiohttp.ClientTimeout(total=10)
+                timeout=aiohttp.ClientTimeout(total=10),
             ) as resp:
                 if resp.status != 200:
                     return None
@@ -163,7 +168,7 @@ async def _send_alert(context, admin_ids: list, message: str):
             await context.bot.send_message(
                 chat_id=admin_id,
                 text=message,
-                parse_mode=ParseMode.MARKDOWN
+                parse_mode=ParseMode.MARKDOWN,
             )
         except Exception as e:
             log.error(f"Failed to send alert to {admin_id}: {e}")

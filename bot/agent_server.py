@@ -3,11 +3,7 @@ NetBot Agent Registration & Download Server
 Handles agent self-registration and serves installer scripts
 """
 
-import hashlib
-import hmac
-import json
 import logging
-import os
 import time
 from pathlib import Path
 
