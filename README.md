@@ -1,155 +1,87 @@
-# J1 NOC Nexus
+<div align="center">
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/Flask-000?style=for-the-badge&logo=flask&logoColor=white">
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white">
+  <img src="https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white">
+</div>
 
-**Version:** v1.0  
-**Status:** Active Development  
-**Repository:** https://github.com/OneByJorah/J1-NOC-Nexus
+<br>
 
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Technology Stack](#technology-stack)
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Service Management](#service-management)
-- [Project Structure](#project-structure)
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
-- [Author](#author)
-
----
-
-## Overview
-
-J1 NOC Nexus is the next-generation expansion of the J1 NOC platform. It adds automated discovery, SNMP scanning, Telegram bot integration, and cross-platform agents (Linux + Windows) alongside the Flask dashboard.
-
-Built for operators who want one pane to monitor, chat, and act on infrastructure events.
+<div align="center">
+  <h1>📡 J1 NOC Nexus</h1>
+  <p><strong>Unified Network Operations Center Platform</strong></p>
+  <p>Telegram bot, SNMP discovery, live dashboard, and cross-platform agents for infrastructure management</p>
+  <p>
+    <a href="#-features">Features</a> •
+    <a href="#-quick-start">Quick Start</a> •
+    <a href="#-architecture">Architecture</a> •
+    <a href="#-components">Components</a>
+  </p>
+</div>
 
 ---
 
-## Architecture
+## ✨ Features
 
-Client → Flask dashboard + Telegram bot → FastAPI backend (`bot/`, `dashboard/`) → network discovery + SNMP scanners → agents (Linux/Windows) → alerting and automation.
+- **Telegram Bot** — Command execution, notifications, scheduling via Telegram
+- **Flask Dashboard** — Real-time observability dashboard
+- **SNMP Discovery** — Automated network scanning and discovery
+- **Cross-Platform Agents** — Linux and Windows bootstrap scripts
+- **FastAPI Backend** — Modern async API layer
+- **Unified Monitoring** — Centralized view of infrastructure events
 
-Data paths:
-- Dashboard: `dashboard/app.py` + `dashboard/templates/index.html`
-- Bot: `bot/main.py`, `bot/handlers.py`, `bot/keyboards.py`
-- Discovery: `discovery/network_scanner.py`, `discovery/snmp_scanner.py`
-- Agents: `agents/linux/`, `agents/windows/`
-
----
-
-## Technology Stack
-
-| Layer | Stack |
-|---|---|
-| Runtime | Linux / Windows |
-| Backend | Python / Flask / FastAPI |
-| Frontend | HTML5 Dashboard |
-| Automation | Telegram bot |
-| Discovery | Network scanner, SNMP |
-| Agents | Bash/PowerShell install wrappers + Python agent |
-| VCS | Git + GitHub (`github.com/OneByJorah/J1-NOC-Nexus`) |
-
----
-
-## Features
-
-- **Dashboard**: real-time monitoring with Flask.
-- **Telegram bot**: command handlers, keyboards, and scheduler for notifications.
-- **Discovery**: automated network and SNMP scanning.
-- **Cross-platform agents**: Linux (`agents/linux/`) and Windows (`agents/windows/`).
-- **Install scripts**: one-click bootstrap for agents (`install.sh`, `install.ps1`).
-- **CI**: `.github/workflows/ci.yml` for automated checks.
-
----
-
-## Getting Started
+## 🚀 Quick Start
 
 ```bash
-# 1. Clone
 git clone https://github.com/OneByJorah/J1-NOC-Nexus.git
 cd J1-NOC-Nexus
-
-# 2. Install backend
 pip install -r requirements.txt
-
-# 3. Run dashboard
-python3 dashboard/app.py
-
-# 4. Run bot (in another terminal)
-python3 bot/main.py
+# Configure your .env file with Telegram bot token
+python3 handlers.py
 ```
 
-Visit `http://localhost:5000`.
-
----
-
-## Service Management
-
+Or with Docker:
 ```bash
-# Quick start
-python3 dashboard/app.py
-
-# Docker
-docker compose up -d
+docker-compose up -d
 ```
 
----
-
-## Project Structure
+## 🏗️ Architecture
 
 ```
 J1-NOC-Nexus/
-├── dashboard/
-│   ├── app.py
-│   └── templates/
-│       └── index.html
-├── bot/
-│   ├── main.py
-│   ├── handlers.py
-│   ├── keyboards.py
-│   └── scheduler.py
-├── discovery/
-│   ├── network_scanner.py
-│   └── snmp_scanner.py
-├── agents/
-│   ├── linux/agent.py
-│   └── windows/agent.ps1
-├── docs/screenshots/
-│   └── j1-noc-nexus-dashboard.png
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-└── README.md
+├── agents/                    # Platform-specific agents
+│   ├── agent.ps1              # Windows agent
+│   └── install.sh             # Linux agent bootstrap
+├── bot/                       # Telegram bot logic
+├── config/                    # Configuration files
+├── dashboard/                 # Flask dashboard
+├── discovery/                 # SNMP & network discovery
+├── tests/                     # Test suite
+├── docs/                      # Documentation
+├── handlers.py                # Bot command handlers
+├── snmp_scanner.py            # SNMP scanning module
+├── index.html                 # Dashboard frontend
+├── docker-compose.yml         # Docker deployment
+└── requirements.txt
 ```
 
----
+## 🔧 Components
 
-## Screenshots
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| Dashboard | Flask/HTML5 | Real-time monitoring UI |
+| Bot | python-telegram-bot | Telegram command interface |
+| Backend | FastAPI | Async API layer |
+| Discovery | Python/SNMP | Network scanning |
+| Agents | PowerShell/Bash | Cross-platform deployment |
 
-### J1 NOC Nexus Dashboard
-![J1 NOC Nexus Dashboard](docs/screenshots/j1-noc-nexus-dashboard.png)
+## 📄 License
 
----
-
-## Contributing
-
-1. Create a feature branch off `main`.
-2. Test on both Linux and Windows when changing agents.
-3. Submit a PR with description and screenshots for UI changes.
-
----
-
-## License
-
-MIT
+MIT © Jhonattan L. Jimenez
 
 ---
 
-## Author
-
-Built by **Jhonattan L. Jimenez**.
+<div align="center">
+  <p>🌐 Your NOC, unified</p>
+  <p><a href="https://github.com/OneByJorah">@OneByJorah</a></p>
+</div>
