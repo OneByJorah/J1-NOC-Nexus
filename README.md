@@ -36,8 +36,8 @@
 git clone https://github.com/OneByJorah/J1-NOC-Nexus.git
 cd J1-NOC-Nexus
 pip install -r requirements.txt
-# Configure your .env file with Telegram bot token
-python3 handlers.py
+# Copy and configure config/config.yaml.example → config/config.yaml
+python3 bot/main.py
 ```
 
 Or with Docker:
