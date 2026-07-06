@@ -16,7 +16,9 @@ from flask_socketio import SocketIO, emit
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "netbot-dashboard-secret")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+if not app.config["SECRET_KEY"]:
+    raise RuntimeError("SECRET_KEY environment variable must be set for dashboard")
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Shared state injected from main bot
