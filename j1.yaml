@@ -1,0 +1,7 @@
+repo: J1-NOC-Nexus
+class: Monitoring / NOC
+org: OneByJorah
+license: MIT
+production_score: 65
+last_audit: "2026-07-05"
+deploy_target: scratch
