@@ -1,0 +1,1 @@
+# NetBot discovery package
