@@ -75,5 +75,12 @@ fi
 # Source .env
 export $(grep -v '^#' /app/.env | xargs)
 
+# Ensure a config exists so the dashboard/agent server can boot even
+# without a full Telegram setup (demo mode).
+if [ ! -f /app/config/config.yaml ] && [ -f /app/config/config.yaml.example ]; then
+    cp /app/config/config.yaml.example /app/config/config.yaml
+    echo "ℹ️  Copied config.yaml.example -> config.yaml (edit to enable the Telegram bot)"
+fi
+
 echo "Starting J1 NOC Nexus..."
 exec "$@"

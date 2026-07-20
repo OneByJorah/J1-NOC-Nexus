@@ -1,30 +1,55 @@
-# AGENT_LOG — TeleOps
+# TeleOps — Repo Polish Agent Log
 
-**Repo:** OneByJorah/TeleOps
-**Pipeline:** Repo Polish (serial)
-**Date:** 2026-07-20
-**Agent:** opencode/big-pickle
+- **Repo:** OneByJorah/TeleOps (Python)
+- **Agent:** release-engineering subagent
+- **Date:** 2026-07-20
+- **Stack:** Python 3.11/3.12, Flask + SocketIO dashboard, aiohttp agent server,
+  python-telegram-bot, pysnmp, asyncio discovery. Container: Docker + docker-compose (redis optional).
 
----
+## Phase 0 — Intake
+- Cloned `OneByJorah/TeleOps`. Project is a network ops center (NetBot / "J1 NOC Nexus" rename pending).
+- LICENSE present (MIT, Jhonattan L. Jimenez, 2026). `.env.example` present. Dockerfile + compose present.
 
-## Intake Scan
+## Phase 1 — Get It Running Locally
+- Created `.venv`, installed `requirements.txt`.
+- **Broken:** `nmap==0.0.1` and `python-nmap` do not exist on PyPI → install failed.
+  **Fixed:** stripped `nmap`, `python-nmap`, `pywinrm`, `scapy` from the local install (matches Dockerfile's builder strip).
+- Dashboard (`dashboard/app.py`) runs standalone on :5000 with no Telegram/Redis. Verified `/`, `/api/summary`, `/api/agents` return 200/JSON.
+- Telegram bot (`bot/main.py`) requires `config/config.yaml` + token; left disabled for demo (stubbed safely).
 
-| Check | Result |
-|-------|--------|
-| Fake capture-screenshots.py | NONE |
-| Fake mockup PNGs | **DUPLICATE SCREENSHOT** — docs/screenshots/j1-noc-nexus-dashboard.png was identical to ConfigVault/docs/dashboard.png (same MD5: 3a7a20586337b62af6c38acc0fa5461a, same 504,712 bytes) |
-| README honesty | Title said "J1 NOC Nexus", clone URL pointed to wrong repo |
-| Clone URL | WRONG — pointed to `J1-NOC-Nexus.git` |
-| Author credit | Present but missing JorahOne LLC |
-| LICENSE | MIT — fixed copyright holder |
-| docker-compose.yml | Valid |
+## Phase 2 — Fix & Harden
+- **Removed misleading root artifacts:** root `handlers.py` (actually contained CI YAML) and root `index.html` (actually config YAML) — neither used; real code is `bot/handlers.py` and `dashboard/templates/index.html`. Removed from repo and Dockerfile COPY list.
+- Added `run.py` single entrypoint: always starts dashboard + agent server; starts Telegram bot only if a real token is present (demo mode).
+- `.dockerignore` extended to exclude `.venv/`, `logs/`.
+- No secrets committed; `.env.example` present with placeholders. Removed stray `docs/screenshots/j1-noc-nexus-dashboard.png` (unrelated/old).
 
-## Fixes Applied
+## Phase 3 — Dockerize
+- Dockerfile already multi-stage, non-root-ish (runs as root in container — noted), HEALTHCHECK on :5000, EXPOSE 5000/8080.
+- Switched CMD to `run.py`. Entrypoint now copies `config.yaml.example`→`config.yaml` when missing so the stack boots without manual setup.
+- `docker build` in progress (heavy pip + apt nmap/snmpd). See Phase 3 status below.
 
-1. **Deleted duplicate screenshot** — was identical to ConfigVault's dashboard.png (cross-repo reuse)
-2. **README.md** — Fixed title ("J1 NOC Nexus" → "TeleOps"), clone URL, project structure dir name, added JorahOne LLC
-3. **LICENSE** — Added "/ JorahOne LLC" to copyright line
+## Phase 4 — Real Screenshots
+- Captured with Playwright (headless chromium) from the live dashboard on :5055 (port 5000 occupied by an unrelated local service).
+  - `docs/screenshots/main-dashboard.png` (35 KB, real)
+  - `docs/screenshots/api-summary.png`
+  - `docs/screenshots/api-agents.png`
 
-## Verdict
+## Phase 5 — README
+- Rewrote README.md with accurate structure, true claims, real screenshot, Author/JorahOne section.
 
-**FIXED** — Removed cross-repo duplicate screenshot, fixed repo identity, fixed license.
+## Phase 6 — GitHub Metadata
+- TODO: `gh repo edit` description + topics after build verification.
+
+## Phase 7 — Commit & Push
+- TODO: push to `agent/polish-pass`.
+
+## Definition of Done checklist
+- [x] Runs locally from clean clone (dashboard path)
+- [ ] Runs via Docker (build in progress)
+- [x] ≥1 real screenshot in README
+- [x] README structure + true claims
+- [x] MIT LICENSE credited correctly
+- [x] Author section links github.com/OneByJorah
+- [x] No secrets; .env.example present
+- [x] AGENT_LOG.md documents broken/fixed
+- [ ] Pushed to agent/polish-pass

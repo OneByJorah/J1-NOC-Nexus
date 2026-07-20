@@ -37,9 +37,8 @@ COPY discovery/ discovery/
 COPY agents/ agents/
 COPY tests/ tests/
 COPY docs/ docs/
-COPY handlers.py .
 COPY snmp_scanner.py .
-COPY index.html .
+COPY run.py .
 COPY requirements.txt .
 
 # Create data directories
@@ -55,4 +54,4 @@ EXPOSE 5000 8080
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["python3", "bot/main.py"]
+CMD ["python3", "run.py"]

@@ -1,6 +1,9 @@
 .git
 .gitignore
 .env
+.venv/
+venv/
+logs/
 __pycache__/
 *.pyc
 .idea/
