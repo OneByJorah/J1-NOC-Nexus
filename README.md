@@ -1,91 +1,61 @@
-<div align="center">
-  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white">
-  <img src="https://img.shields.io/badge/Flask-000?style=for-the-badge&logo=flask&logoColor=white">
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white">
-  <img src="https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white">
-</div>
+# TeleOps
 
-<br>
+Unified Network Operations Center platform — Telegram bot, SNMP discovery, live dashboard, and cross-platform agents for infrastructure management.
 
-<div align="center">
-  <h1>📡 TeleOps</h1>
-  <p><strong>Unified Network Operations Center Platform</strong></p>
-  <p>Telegram bot, SNMP discovery, live dashboard, and cross-platform agents for infrastructure management</p>
-  <p>
-    <a href="#-features">Features</a> •
-    <a href="#-quick-start">Quick Start</a> •
-    <a href="#-architecture">Architecture</a> •
-    <a href="#-components">Components</a>
-  </p>
-</div>
+![status](https://img.shields.io/badge/status-active-FFB300?style=flat-square)
+![language](https://img.shields.io/badge/python-3.10+-0d0d0c?style=flat-square)
+![license](https://img.shields.io/badge/license-MIT-FFB300?style=flat-square)
 
----
+## Overview
 
-## 📸 Screenshot
+TeleOps is a self-hosted NOC (Network Operations Center) that brings together Telegram-based bot commands, automated SNMP network discovery, a live Flask dashboard, and cross-platform agents (Linux + Windows) for centralized infrastructure management. It's designed for environments where a full NOC setup is overkill but operational visibility is non-negotiable.
 
-This is a CLI/backend-only tool. No screenshots available.
+## Features
 
-## ✨ Features
+- Telegram bot for command execution, alerts, and scheduling
+- Flask + SocketIO live dashboard with real-time observability
+- SNMP network discovery and automated scanning (pysnmp)
+- Cross-platform agents — Linux shell + Windows PowerShell bootstrap
+- FastAPI async API layer for integrations
+- Redis-backed pub/sub for event streaming
+- Scapy-based network scanning for asset discovery
+- Docker Compose deployment
 
-- **Telegram Bot** — Command execution, notifications, scheduling via Telegram
-- **Flask Dashboard** — Real-time observability dashboard
-- **SNMP Discovery** — Automated network scanning and discovery
-- **Cross-Platform Agents** — Linux and Windows bootstrap scripts
-- **FastAPI Backend** — Modern async API layer
-- **Unified Monitoring** — Centralized view of infrastructure events
+## Architecture / Tech Stack
 
-## 🚀 Quick Start
+- **Bot**: python-telegram-bot, Redis
+- **Dashboard**: Flask + Flask-SocketIO, vanilla JS
+- **Discovery**: pysnmp, Scapy
+- **API**: FastAPI (Python async)
+- **Cache**: Redis
+- **Deployment**: Docker Compose, install scripts
+- **Platforms**: Linux, Windows
+
+## Installation
 
 ```bash
 git clone https://github.com/OneByJorah/TeleOps.git
 cd TeleOps
+
+# Option 1: Python
 pip install -r requirements.txt
-# Configure your .env file with Telegram bot token
+cp .env.example .env  # Edit with your Telegram bot token
 python3 handlers.py
+
+# Option 2: Docker
+docker compose up -d
 ```
 
-Or with Docker:
-```bash
-docker-compose up -d
-```
+## Usage
 
-## 🏗️ Architecture
+1. Configure your Telegram bot token in `.env`
+2. Start the dashboard and bot
+3. Use Telegram commands to query infrastructure, trigger scans, or receive alerts
+4. View real-time status at `http://localhost:5000`
 
-```
-TeleOps/
-├── agents/                    # Platform-specific agents
-│   ├── agent.ps1              # Windows agent
-│   └── install.sh             # Linux agent bootstrap
-├── bot/                       # Telegram bot logic
-├── config/                    # Configuration files
-├── dashboard/                 # Flask dashboard
-├── discovery/                 # SNMP & network discovery
-├── tests/                     # Test suite
-├── docs/                      # Documentation
-├── handlers.py                # Bot command handlers
-├── snmp_scanner.py            # SNMP scanning module
-├── index.html                 # Dashboard frontend
-├── docker-compose.yml         # Docker deployment
-└── requirements.txt
-```
+## License
 
-## 🔧 Components
-
-| Component | Technology | Description |
-|-----------|------------|-------------|
-| Dashboard | Flask/HTML5 | Real-time monitoring UI |
-| Bot | python-telegram-bot | Telegram command interface |
-| Backend | FastAPI | Async API layer |
-| Discovery | Python/SNMP | Network scanning |
-| Agents | PowerShell/Bash | Cross-platform deployment |
-
-## 📄 License
-
-MIT © Jhonattan L. Jimenez
+MIT — see [LICENSE](LICENSE).
 
 ---
-
-<div align="center">
-  <p>🌐 Your NOC, unified</p>
-  <p><a href="https://github.com/OneByJorah">@OneByJorah</a></p>
-</div>
+Part of the JorahOne / J1 ecosystem — unified ops for self-hosted infrastructure.
