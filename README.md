@@ -8,7 +8,7 @@
 <br>
 
 <div align="center">
-  <h1>📡 J1 NOC Nexus</h1>
+  <h1>📡 TeleOps</h1>
   <p><strong>Unified Network Operations Center Platform</strong></p>
   <p>Telegram bot, SNMP discovery, live dashboard, and cross-platform agents for infrastructure management</p>
   <p>
@@ -37,8 +37,8 @@ This is a CLI/backend-only tool. No screenshots available.
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/OneByJorah/J1-NOC-Nexus.git
-cd J1-NOC-Nexus
+git clone https://github.com/OneByJorah/TeleOps.git
+cd TeleOps
 pip install -r requirements.txt
 # Configure your .env file with Telegram bot token
 python3 handlers.py
@@ -52,7 +52,7 @@ docker-compose up -d
 ## 🏗️ Architecture
 
 ```
-J1-NOC-Nexus/
+TeleOps/
 ├── agents/                    # Platform-specific agents
 │   ├── agent.ps1              # Windows agent
 │   └── install.sh             # Linux agent bootstrap
