@@ -20,3 +20,6 @@ build/
 *.so
 # Logs
 *.log
+
+# OneByJorah portfolio tooling
+.venv-screenshot/
